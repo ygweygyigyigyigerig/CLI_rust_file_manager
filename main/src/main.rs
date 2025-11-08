@@ -54,8 +54,15 @@ fn remove_psswd() -> std::io::Result<()> {
     Ok(())
 }
 
-fn list_passwds() {}
-
+fn list_passwds() -> std::io::Result<()> {
+    let path = set_path_and_check_if_exists()?;
+    for entry in fs::read_dir(&path)? {
+        let entry = entry?;
+        let path = entry.path();
+        println!("{}", path.display());
+    }
+    Ok(())
+}
 fn main() -> std::io::Result<()> {
     println!("***************************");
     println!("Welcome in password manager");
@@ -72,7 +79,7 @@ fn main() -> std::io::Result<()> {
     match action {
         1 => create_passwd()?,
         2 => remove_psswd()?,
-        3 => println!("E"),
+        3 => list_passwds()?,
         4 => return Ok(()),
         _ => println!("Chose from 1-4"),
     }
