@@ -33,7 +33,6 @@ fn read_input_str() -> String {
 fn create_passwd() -> std::io::Result<()> {
     println!("Chose name for your password: ");
     let name_of_passwd: String = read_input_str();
-    let mut file = File::create(&name_of_passwd)?;
 
     let dir = set_path_and_check_if_exists()?;
     let path = dir.join(name_of_passwd);
