@@ -35,7 +35,7 @@ fn create_passwd() -> std::io::Result<()> {
     let name_of_passwd: String = read_input_str();
 
     let dir = set_path_and_check_if_exists()?;
-    let path = dir.join(name_of_passwd);
+    let path = dir.join(&name_of_passwd);
 
     println!("Your password: ");
     let passwd = read_input_str();
