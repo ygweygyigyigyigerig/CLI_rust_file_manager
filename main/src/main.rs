@@ -72,16 +72,17 @@ fn main() -> std::io::Result<()> {
     println!("2. Remove password");
     println!("3. List all passwords");
     println!("4. Exit\n");
-    println!("Chose your action: \n");
+    loop {
+        println!("Chose your action: ");
+        let action: u32 = read_input_int();
 
-    let action: u32 = read_input_int();
-
-    match action {
-        1 => create_passwd()?,
-        2 => remove_psswd()?,
-        3 => list_passwds()?,
-        4 => return Ok(()),
-        _ => println!("Chose from 1-4"),
+        match action {
+            1 => create_passwd()?,
+            2 => remove_psswd()?,
+            3 => list_passwds()?,
+            4 => break,
+            _ => println!("Chose from 1-4"),
+        }
     }
     Ok(())
 }
