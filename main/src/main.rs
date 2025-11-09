@@ -1,9 +1,5 @@
 use std::fs;
-use std::fs::File;
 use std::io;
-use std::io::Write;
-use std::io::prelude::*;
-use std::path::Path;
 use std::path::PathBuf;
 
 fn set_path_and_check_if_exists() -> io::Result<PathBuf> {
