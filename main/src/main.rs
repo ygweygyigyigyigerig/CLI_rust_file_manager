@@ -8,22 +8,35 @@ fn set_path_and_check_if_exists() -> io::Result<PathBuf> {
     Ok(dir)
 }
 
-fn read_input_int() -> u32 {
+fn read_input_int() -> io::Result<u32> {
     let mut input = String::new();
     let stdin = io::stdin();
-    stdin.read_line(&mut input);
 
-    input
-        .trim()
-        .parse::<u32>()
-        .expect("Please enter a valid number")
+    loop {
+        input.clear();
+        stdin.read_line(&mut input)?;
+
+        if let Ok(num) = input.trim().parse::<u32>() {
+            break Ok(num);
+        }
+
+        println!("Invalid input! Try again.");
+    }
 }
 
 fn read_input_str() -> String {
     let mut input = String::new();
     let stdin = io::stdin();
-    stdin.read_line(&mut input);
-    input.trim().to_string()
+
+    loop {
+        match stdin.read_line(&mut input) {
+            Ok(_) => return input.trim().to_string(),
+            Err(e) => {
+                println!("Error reading input: {}. Try again.", e);
+                continue;
+            }
+        }
+    }
 }
 
 fn create_passwd() -> std::io::Result<()> {
@@ -70,7 +83,7 @@ fn main() -> std::io::Result<()> {
     println!("4. Exit\n");
     loop {
         println!("Chose your action: ");
-        let action: u32 = read_input_int();
+        let action: u32 = read_input_int()?;
 
         match action {
             1 => create_passwd()?,
