@@ -48,7 +48,7 @@ fn create_passwd() -> std::io::Result<()> {
 
     println!("Your password: ");
     let passwd = read_input_str();
-    fs::write(&path, passwd)?;
+    fs::write(&path, &passwd)?;
     Ok(())
 }
 
@@ -59,7 +59,7 @@ fn remove_psswd() -> std::io::Result<()> {
     println!("Enter name of password you'd like to delete: ");
     let name_of_passwd_to_del: String = read_input_str();
     let passwd = dir.join(&name_of_passwd_to_del);
-    fs::remove_file(passwd)?;
+    fs::remove_file(&passwd)?;
     Ok(())
 }
 
