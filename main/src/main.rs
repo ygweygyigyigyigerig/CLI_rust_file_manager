@@ -3,29 +3,20 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
-fn set_dir() -> std::io::Result<()> {
+fn set_dir() -> String {
     println!("Chose directory, where passwords will be saved ");
 
     loop {
         let input = read_input_str();
 
-        let path = &input;
-
-        if Path::new(&path).exists() {
-            println!("Path '{}' exists! Path updated sucesfully.", path);
-            break;
+        if Path::new(&input).exists() {
+            println!("Path '{}' exists! Path updated sucesfully.", input);
+            return input;
         } else {
-            println!("Path '{}' does not exist! Retry", path);
+            println!("Path '{}' does not exist! Retry\n", input);
             continue;
         }
     }
-    Ok(())
-}
-
-fn set_path_and_check_if_exists() -> io::Result<PathBuf> {
-    let dir = PathBuf::from("/home/simon/secret-passwords");
-    fs::create_dir_all(&dir)?;
-    Ok(dir)
 }
 
 fn read_input_int() -> io::Result<u32> {
@@ -59,12 +50,11 @@ fn read_input_str() -> String {
     }
 }
 
-fn create_passwd() -> std::io::Result<()> {
+fn create_passwd(dir: &str) -> std::io::Result<()> {
     println!("Chose name for your password: ");
     let name_of_passwd: String = read_input_str();
 
-    let dir = set_path_and_check_if_exists()?;
-    let path = dir.join(&name_of_passwd);
+    let path: PathBuf = PathBuf::from(dir).join(&name_of_passwd);
 
     println!("Your password: ");
     let passwd = read_input_str();
@@ -72,20 +62,19 @@ fn create_passwd() -> std::io::Result<()> {
     Ok(())
 }
 
-fn remove_psswd() -> std::io::Result<()> {
+fn remove_psswd(dir: &str) -> std::io::Result<()> {
     // Intialize dir, to later join name_of_passwd_to_del later on.
-    let dir = set_path_and_check_if_exists()?;
-
     println!("Enter name of password you'd like to delete: ");
+    // get input
     let name_of_passwd_to_del: String = read_input_str();
-    let passwd = dir.join(&name_of_passwd_to_del);
-    fs::remove_file(&passwd)?;
+    // get whole password path
+    let passwd_path: PathBuf = PathBuf::from(dir).join(&name_of_passwd_to_del);
+    fs::remove_file(&passwd_path)?;
     Ok(())
 }
 
-fn list_passwds() -> std::io::Result<()> {
-    let path = set_path_and_check_if_exists()?;
-    for entry in fs::read_dir(&path)? {
+fn list_passwds(dir: &str) -> std::io::Result<()> {
+    for entry in fs::read_dir(&dir)? {
         let entry = entry?;
         let path = entry.path();
         println!("{}", path.display());
@@ -93,6 +82,8 @@ fn list_passwds() -> std::io::Result<()> {
     Ok(())
 }
 fn main() -> std::io::Result<()> {
+    let mut dir = String::new();
+
     println!("***************************");
     println!("Welcome in password manager");
     println!("***************************");
@@ -107,10 +98,10 @@ fn main() -> std::io::Result<()> {
         let action: u32 = read_input_int()?;
 
         match action {
-            1 => create_passwd()?,
-            2 => remove_psswd()?,
-            3 => list_passwds()?,
-            4 => set_dir()?,
+            1 => create_passwd(&dir)?,
+            2 => remove_psswd(&dir)?,
+            3 => list_passwds(&dir)?,
+            4 => dir = set_dir(),
             5 => break,
             _ => println!("Chose from 1-4"),
         }
