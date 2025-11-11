@@ -1,6 +1,26 @@
 use std::fs;
 use std::io;
+use std::path::Path;
 use std::path::PathBuf;
+
+fn set_dir() -> std::io::Result<()> {
+    println!("Chose directory, where passwords will be saved ");
+
+    loop {
+        let input = read_input_str();
+
+        let path = &input;
+
+        if Path::new(&path).exists() {
+            println!("Path '{}' exists! Path updated sucesfully.", path);
+            break;
+        } else {
+            println!("Path '{}' does not exist! Retry", path);
+            continue;
+        }
+    }
+    Ok(())
+}
 
 fn set_path_and_check_if_exists() -> io::Result<PathBuf> {
     let dir = PathBuf::from("/home/simon/secret-passwords");
@@ -80,7 +100,8 @@ fn main() -> std::io::Result<()> {
     println!("1. Create password");
     println!("2. Remove password");
     println!("3. List all passwords");
-    println!("4. Exit\n");
+    println!("4. Set directory");
+    println!("5. Exit\n");
     loop {
         println!("Chose your action: ");
         let action: u32 = read_input_int()?;
@@ -89,7 +110,8 @@ fn main() -> std::io::Result<()> {
             1 => create_passwd()?,
             2 => remove_psswd()?,
             3 => list_passwds()?,
-            4 => break,
+            4 => set_dir()?,
+            5 => break,
             _ => println!("Chose from 1-4"),
         }
     }
