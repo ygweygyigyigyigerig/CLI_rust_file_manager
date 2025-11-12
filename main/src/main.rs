@@ -59,6 +59,7 @@ fn create_passwd(dir: &str) -> std::io::Result<()> {
     println!("Your password: ");
     let passwd = read_input_str();
     fs::write(&path, &passwd)?;
+    println!("Sucesfully saved password at {}", path.display());
     Ok(())
 }
 
@@ -70,6 +71,7 @@ fn remove_psswd(dir: &str) -> std::io::Result<()> {
     // get whole password path
     let passwd_path: PathBuf = PathBuf::from(dir).join(&name_of_passwd_to_del);
     fs::remove_file(&passwd_path)?;
+    println!("Sucesfully deleted password, {}", passwd_path.display());
     Ok(())
 }
 
@@ -103,7 +105,7 @@ fn main() -> std::io::Result<()> {
             3 => list_passwds(&dir)?,
             4 => dir = set_dir(),
             5 => break,
-            _ => println!("Chose from 1-4"),
+            _ => println!("Chose from 1-5"),
         }
     }
     Ok(())
