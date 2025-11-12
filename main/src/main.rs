@@ -84,6 +84,7 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
     Ok(())
 }
 fn main() -> std::io::Result<()> {
+    let mut is_dir_set = false;
     let mut dir = String::new();
 
     println!("***************************");
@@ -100,10 +101,35 @@ fn main() -> std::io::Result<()> {
         let action: u32 = read_input_int()?;
 
         match action {
-            1 => create_passwd(&dir)?,
-            2 => remove_psswd(&dir)?,
-            3 => list_passwds(&dir)?,
-            4 => dir = set_dir(),
+            1 => {
+                if is_dir_set {
+                    create_passwd(&dir)?
+                } else {
+                    println!("Set directory where passwords will be saved (Option 4)");
+                }
+            }
+
+            2 => {
+                if is_dir_set {
+                    remove_psswd(&dir)?
+                } else {
+                    println!("Set directory in which passwords will be removed (Option 4");
+                }
+            }
+
+            3 => {
+                if is_dir_set {
+                    list_passwds(&dir)?
+                } else {
+                    println!("Set directory where passwords will be listed (Option 4)");
+                }
+            }
+
+            4 => {
+                dir = set_dir();
+                is_dir_set = true;
+            }
+
             5 => break,
             _ => println!("Chose from 1-5"),
         }
