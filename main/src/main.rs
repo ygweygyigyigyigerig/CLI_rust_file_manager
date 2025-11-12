@@ -7,13 +7,22 @@ fn set_dir() -> String {
     println!("Chose directory, where passwords will be saved ");
 
     loop {
-        let input = read_input_str();
+        let mut dir = read_input_str();
 
-        if Path::new(&input).exists() {
-            println!("Path '{}' exists! Path updated sucesfully.", input);
-            return input;
+        if Path::new(&dir).exists() {
+            println!("Path '{}' exists! Path updated sucesfully.", dir);
+            println!(
+                "Would you like to save directory, so it will be loaded automatically next time? (Yes/No)"
+            );
+            let user_choice = read_input_str().to_lowercase();
+
+            if user_choice == "yes" || user_choice == "y" {
+                // Future support for actualy saving dir and autoloading it
+                println!("Work in progress");
+            }
+            return dir;
         } else {
-            println!("Path '{}' does not exist! Retry\n", input);
+            println!("Path '{}' does not exist! Retry\n", dir);
             continue;
         }
     }
@@ -84,6 +93,7 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
     Ok(())
 }
 fn main() -> std::io::Result<()> {
+    let mut saved_dir = String::new();
     let mut is_dir_set = false;
     let mut dir = String::new();
 
@@ -121,7 +131,7 @@ fn main() -> std::io::Result<()> {
                 if is_dir_set {
                     list_passwds(&dir)?
                 } else {
-                    println!("Set directory where passwords will be listed (Option 4)");
+                    println!("Set directory");
                 }
             }
 
