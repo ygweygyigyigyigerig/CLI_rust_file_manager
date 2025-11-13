@@ -93,7 +93,8 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
     Ok(())
 }
 fn main() -> std::io::Result<()> {
-    let mut saved_dir = String::new();
+    // Needs to be mut later
+    let saved_dir = String::new();
     let mut is_dir_set = false;
     let mut dir = String::new();
 
