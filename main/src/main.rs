@@ -3,11 +3,18 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
+fn save_dir(dir: &str) {
+    println!("Saved dir, {}", &dir);
+    let mut exe_dir = std::env::current_dir().unwrap();
+    exe_dir.set_file_name("saved_dir");
+    std::fs::write(&exe_dir, &dir).expect("boo you crashed or sum");
+}
+
 fn set_dir() -> String {
     println!("Chose directory, where passwords will be saved ");
 
     loop {
-        let mut dir = read_input_str();
+        let dir = read_input_str();
 
         if Path::new(&dir).exists() {
             println!("Path '{}' exists! Path updated sucesfully.", dir);
@@ -17,8 +24,7 @@ fn set_dir() -> String {
             let user_choice = read_input_str().to_lowercase();
 
             if user_choice == "yes" || user_choice == "y" {
-                // Future support for actualy saving dir and autoloading it
-                println!("Work in progress");
+                save_dir(&dir);
             }
             return dir;
         } else {
@@ -94,9 +100,13 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
 }
 fn main() -> std::io::Result<()> {
     // Needs to be mut later
-    let saved_dir = String::new();
+    let saved_dir = Path::new("saved_dir");
     let mut is_dir_set = false;
     let mut dir = String::new();
+
+    if saved_dir.exists() {
+        println!("Detected directory that've been saved, do you want to reload it? ");
+    }
 
     println!("***************************");
     println!("Welcome in password manager");
