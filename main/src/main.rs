@@ -3,6 +3,8 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
+fn check_for_dir_save() {}
+
 fn save_dir(dir: &str) {
     println!("Saved dir, {}", &dir);
     let mut exe_dir = std::env::current_dir().unwrap();
@@ -99,14 +101,10 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
     Ok(())
 }
 fn main() -> std::io::Result<()> {
-    // Needs to be mut later
-    let saved_dir = Path::new("saved_dir");
     let mut is_dir_set = false;
     let mut dir = String::new();
 
-    if saved_dir.exists() {
-        println!("Detected directory that've been saved, do you want to reload it? ");
-    }
+    check_for_dir_save();
 
     println!("***************************");
     println!("Welcome in password manager");
