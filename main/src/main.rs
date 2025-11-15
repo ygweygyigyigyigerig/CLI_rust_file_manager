@@ -3,13 +3,34 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
-fn check_for_dir_save() {}
+fn check_for_dir_save(dir: &mut String, is_dir_set_true: &mut bool) {
+    match fs::exists("saved_dir") {
+        Ok(true) => {
+            println!("Saved directory dected, would you like to load it?");
+            let user_choice = read_input_str().to_lowercase();
+
+            if user_choice == "yes" || user_choice == "y" {
+                let mut exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                    .join("main")
+                    .with_file_name("saved_dir");
+                let content = fs::read_to_string(&exe_dir)?;
+                *dir = content.trim().to_string();
+
+                *is_dir_set_true = true;
+            }
+        }
+        Ok(false) => println!("\n"),
+        _ => println!("Error"),
+    }
+}
 
 fn save_dir(dir: &str) {
     println!("Saved dir, {}", &dir);
-    let mut exe_dir = std::env::current_dir().unwrap();
+    let mut exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    exe_dir.push("main");
     exe_dir.set_file_name("saved_dir");
     std::fs::write(&exe_dir, &dir).expect("boo you crashed or sum");
+    println!("{}", exe_dir.display());
 }
 
 fn set_dir() -> String {
@@ -103,8 +124,7 @@ fn list_passwds(dir: &str) -> std::io::Result<()> {
 fn main() -> std::io::Result<()> {
     let mut is_dir_set = false;
     let mut dir = String::new();
-
-    check_for_dir_save();
+    check_for_dir_save(&mut dir, &mut is_dir_set);
 
     println!("***************************");
     println!("Welcome in password manager");
