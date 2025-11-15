@@ -13,8 +13,8 @@ fn check_for_dir_save(dir: &mut String, is_dir_set_true: &mut bool) {
                 let mut exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                     .join("main")
                     .with_file_name("saved_dir");
-                let content = fs::read_to_string(&exe_dir)?;
-                *dir = content.trim().to_string();
+                let content = fs::read_to_string(&exe_dir);
+                *dir = content.expect("EEE").trim().to_string();
 
                 *is_dir_set_true = true;
             }
