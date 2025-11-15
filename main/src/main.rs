@@ -3,19 +3,20 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
-fn check_for_dir_save(dir: &mut String, is_dir_set_true: &mut bool) {
+fn check_for_dir_save(dir: &mut str, is_dir_set_true: &mut bool) {
     match fs::exists("saved_dir") {
         Ok(true) => {
             println!("Saved directory dected, would you like to load it?");
             let user_choice = read_input_str().to_lowercase();
 
             if user_choice == "yes" || user_choice == "y" {
-                let mut exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                let exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                     .join("main")
                     .with_file_name("saved_dir");
-                let content = fs::read_to_string(&exe_dir);
-                *dir = content.expect("EEE").trim().to_string();
-
+                println!("{}", exe_dir.display());
+                let content = exe_dir.display().to_string();
+                std::fs::write(&dir, &content);
+                println!("{}", &dir);
                 *is_dir_set_true = true;
             }
         }
