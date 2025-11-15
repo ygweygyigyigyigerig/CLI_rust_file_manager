@@ -15,8 +15,7 @@ fn check_for_dir_save(dir: &mut str, is_dir_set_true: &mut bool) {
                     .with_file_name("saved_dir");
                 println!("{}", exe_dir.display());
                 let content = exe_dir.display().to_string();
-                std::fs::write(&dir, &content);
-                println!("{}", &dir);
+                std::fs::write(&dir, &content).expect("Crashy");
                 *is_dir_set_true = true;
             }
         }
