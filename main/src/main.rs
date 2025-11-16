@@ -25,7 +25,6 @@ fn check_for_dir_save(dir: &mut str, is_dir_set_true: &mut bool) {
 }
 
 fn save_dir(dir: &str) {
-    println!("Saved dir, {}", &dir);
     let mut exe_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     exe_dir.push("main");
     exe_dir.set_file_name("saved_dir");
