@@ -3,6 +3,10 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
+fn load_saved_dir_path() -> io::Result<PathBuf> {
+    fs::read_to_string("saved_dir").map(PathBuf::from)
+}
+
 fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
     match fs::exists("saved_dir") {
         Ok(true) => {
@@ -10,7 +14,7 @@ fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
             let user_choice = read_input_str().to_lowercase();
 
             if user_choice == "yes" || user_choice == "y" {
-                *dir = PathBuf::from("saved_dir");
+                *dir = load_saved_dir_path().expect("e");
                 *is_dir_set_true = true;
             }
         }
@@ -20,9 +24,8 @@ fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
 }
 
 fn save_dir(dir: &mut PathBuf) {
-    *dir = PathBuf::from("saved_dir");
+    fs::write("saved_dir", dir.as_os_str().as_encoded_bytes());
 }
-
 fn set_dir() -> PathBuf {
     println!("Chose directory, where passwords will be saved ");
 
