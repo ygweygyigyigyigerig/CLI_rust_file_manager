@@ -24,7 +24,7 @@ fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
 }
 
 fn save_dir(dir: &mut PathBuf) {
-    fs::write("saved_dir", dir.as_os_str().as_encoded_bytes());
+    fs::write("saved_dir", dir.as_os_str().as_encoded_bytes()).expect("crash");
 }
 fn set_dir() -> PathBuf {
     println!("Chose directory, where passwords will be saved ");
