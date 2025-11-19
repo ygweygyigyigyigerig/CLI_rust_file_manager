@@ -2,6 +2,7 @@ use std::fs;
 use std::io;
 use std::path::Path;
 use std::path::PathBuf;
+mod input;
 
 fn read_input_int() -> io::Result<u32> {
     let mut input = String::new();
@@ -83,7 +84,7 @@ fn save_dir(dir: &mut PathBuf) {
 
 fn create_passwd(dir: &PathBuf) -> std::io::Result<()> {
     println!("Chose name for your password: ");
-    let name_of_passwd: String = read_input_str();
+    let name_of_passwd: String = input::read_input::read_str();
 
     let path = dir.join(&name_of_passwd);
 
