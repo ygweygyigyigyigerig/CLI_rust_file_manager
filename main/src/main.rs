@@ -3,52 +3,6 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
-fn load_saved_dir_path() -> io::Result<PathBuf> {
-    fs::read_to_string("saved_dir").map(PathBuf::from)
-}
-
-fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
-    match fs::exists("saved_dir") {
-        Ok(true) => {
-            println!("Saved directory dected, would you like to load it?");
-            let user_choice = read_input_str().to_lowercase();
-
-            if user_choice == "yes" || user_choice == "y" {
-                *dir = load_saved_dir_path().expect("e");
-                *is_dir_set_true = true;
-            }
-        }
-        Ok(false) => println!("\n"),
-        _ => println!("Error"),
-    }
-}
-
-fn save_dir(dir: &mut PathBuf) {
-    fs::write("saved_dir", dir.as_os_str().as_encoded_bytes()).expect("crash");
-}
-fn set_dir() -> PathBuf {
-    println!("Chose directory, where passwords will be saved ");
-
-    loop {
-        let mut dir: PathBuf = read_input_str().into();
-        if Path::new(&dir).exists() {
-            println!("Path '{}' exists! Path updated sucesfully.", dir.display());
-            println!(
-                "Would you like to save directory, so it will be loaded automatically next time? (Yes/No)"
-            );
-            let user_choice = read_input_str().to_lowercase();
-
-            if user_choice == "yes" || user_choice == "y" {
-                save_dir(&mut dir);
-            }
-            return dir;
-        } else {
-            println!("Path '{}' does not exist! Retry\n", dir.display());
-            continue;
-        }
-    }
-}
-
 fn read_input_int() -> io::Result<u32> {
     let mut input = String::new();
     let stdin = io::stdin();
@@ -80,11 +34,58 @@ fn read_input_str() -> String {
     }
 }
 
+fn load_saved_dir_path() -> io::Result<PathBuf> {
+    fs::read_to_string("saved_dir").map(PathBuf::from)
+}
+
+fn check_for_dir_save(dir: &mut PathBuf, is_dir_set_true: &mut bool) {
+    match fs::exists("saved_dir") {
+        Ok(true) => {
+            println!("Saved directory dected, would you like to load it?");
+            let user_choice = read_input_str().to_lowercase();
+
+            if user_choice == "yes" || user_choice == "y" {
+                *dir = load_saved_dir_path().expect("e");
+                *is_dir_set_true = true;
+            }
+        }
+        Ok(false) => println!("\n"),
+        _ => println!("Error"),
+    }
+}
+
+fn set_dir() -> PathBuf {
+    println!("Chose directory, where passwords will be saved ");
+
+    loop {
+        let mut dir: PathBuf = read_input_str().into();
+        if Path::new(&dir).exists() {
+            println!("Path '{}' exists! Path updated sucesfully.", dir.display());
+            println!(
+                "Would you like to save directory, so it will be loaded automatically next time? (Yes/No)"
+            );
+            let user_choice = read_input_str().to_lowercase();
+
+            if user_choice == "yes" || user_choice == "y" {
+                save_dir(&mut dir);
+            }
+            return dir;
+        } else {
+            println!("Path '{}' does not exist! Retry\n", dir.display());
+            continue;
+        }
+    }
+}
+
+fn save_dir(dir: &mut PathBuf) {
+    fs::write("saved_dir", dir.as_os_str().as_encoded_bytes()).expect("crash");
+}
+
 fn create_passwd(dir: &PathBuf) -> std::io::Result<()> {
     println!("Chose name for your password: ");
     let name_of_passwd: String = read_input_str();
 
-    let path = PathBuf::from(dir).join(&name_of_passwd);
+    let path = dir.join(&name_of_passwd);
 
     println!("Your password: ");
     let passwd = read_input_str();
@@ -99,7 +100,7 @@ fn remove_psswd(dir: &PathBuf) -> std::io::Result<()> {
     // get input
     let name_of_passwd_to_del: String = read_input_str();
     // get whole password path
-    let passwd_path: PathBuf = PathBuf::from(dir).join(&name_of_passwd_to_del);
+    let passwd_path = dir.join(&name_of_passwd_to_del);
     fs::remove_file(&passwd_path)?;
     println!("Sucesfully deleted password, {}", passwd_path.display());
     Ok(())
