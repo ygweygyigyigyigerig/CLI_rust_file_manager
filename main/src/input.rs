@@ -1,5 +1,6 @@
 pub mod read_input {
     use std::io;
+
     pub fn read_int() -> io::Result<u32> {
         let mut input = String::new();
         let stdin = io::stdin();
