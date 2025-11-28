@@ -7,7 +7,7 @@ pub mod read_input {
 
         loop {
             input.clear();
-            stdin.read_line(&mut input)?;
+            stdin.read_line(&mut input).unwrap();
 
             if let Ok(num) = input.trim().parse::<u32>() {
                 break Ok(num);
